@@ -1,0 +1,28 @@
+{
+    "name": "@shad02w/magic-replace",
+    "version": "0.1.0",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "files": ["dist"],
+    "scripts": {
+        "test": "vitest --run",
+        "build": "tsup",
+        "prepublish": "pnpm run test && pnpm run build"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "1.9.4",
+        "tsup": "8.3.5",
+        "typescript": "5.7.2",
+        "vitest": "2.1.8"
+    },
+    "packageManager": "pnpm@9.15.1",
+    "publishConfig": {
+        "access": "public"
+    }
+}
