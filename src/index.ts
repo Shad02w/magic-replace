@@ -1,4 +1,4 @@
-import { createRegex } from "./regex";
+import { createExtractRegex, createMatchingRegex } from "./regex";
 import type { Mapper } from "./type";
 
 /**
@@ -21,11 +21,28 @@ export function replace(
     mapper: Mapper,
     content: string,
 ): string {
-    const superRegex = createRegex([prefix, suffix], mapper);
+    const superRegex = createMatchingRegex([prefix, suffix], mapper);
     return content.replace(superRegex, (_, p) => {
         if (typeof p !== "string") {
             throw new Error("Could not match the pattern group");
         }
         return mapper[p];
     });
+}
+
+export function extractKeys(
+    [prefix, suffix]: [string, string],
+    content: string,
+): string[] {
+    const superRegex = createExtractRegex([prefix, suffix]);
+    const results = content.matchAll(superRegex);
+
+    const keys = new Set<string>();
+    for (const result of results) {
+        const group = result[1];
+        if (!group) continue;
+        keys.add(group);
+    }
+
+    return Array.from(keys);
 }

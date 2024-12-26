@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { replace } from "./index";
+import { extractKeys, replace } from "./index";
 
 describe("magic replace unit tests", () => {
     it("should replace matched pattern", () => {
@@ -48,5 +48,41 @@ describe("magic replace unit tests", () => {
         expect(
             replace(["?", ":"], { a: "123", b: "456" }, "This is a :a"),
         ).toBe("This is a :a");
+    });
+});
+
+describe("extract key of the patterns from the content", () => {
+    it("should extract key from the content", () => {
+        expect(extractKeys(["{", "}"], "This is a {a} and {b}")).toStrictEqual([
+            "a",
+            "b",
+        ]);
+
+        expect(
+            extractKeys(["{", "}"], "This is a {a} and {b} and {a}"),
+        ).toStrictEqual(["a", "b"]);
+    });
+
+    it("should extract keys from the content with escapable characters", () => {
+        expect(
+            extractKeys(["{", "}"], "This is a {a?} and {b?}"),
+        ).toStrictEqual(["a?", "b?"]);
+
+        expect(
+            extractKeys(["{", "}"], "This is a {a?} and {b?} and {a?}"),
+        ).toStrictEqual(["a?", "b?"]);
+    });
+
+    it("should extract keys from the multiple prefix or suffix characters", () => {
+        expect(
+            extractKeys(["$$$", "$$$_"], "This is a $$$a$$$ and $$$b$$$_"),
+        ).toStrictEqual(["b"]);
+
+        expect(
+            extractKeys(
+                ["$$$", "$$$_"],
+                "This is a $$$a$$$ and $$$b$$$_ and $$$c$$$_",
+            ),
+        ).toStrictEqual(["b", "c"]);
     });
 });
