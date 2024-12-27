@@ -4,7 +4,7 @@ import type { Mapper } from "./type";
 /**
  * Replace the patterns in the content with the key-value pairs in the mapper
  *
- * @param patterns - a tuple of prefix and suffix: [prefix, suffix]
+ * @param patterns - a tuple of prefix and suffix: [prefix, suffix], prefix and suffix cannot be empty string
  * @param mapper - The mapper object
  * @param content - The content to be replaced
  * @returns The replaced content
@@ -30,6 +30,20 @@ export function replace(
     });
 }
 
+/**
+ * Extract the pattern keys from the content
+ *
+ * @param patterns - a tuple of prefix and suffix: [prefix, suffix], prefix and suffix cannot be empty string
+ * @param content - The content to be replaced
+ * @returns The extracted keys
+ *
+ * @example
+ * Here is an example of extracting the keys from the content
+ * ```ts
+ * extractKeys(["{", "}"], "This is a {a} and {b} and {a}");
+ * ```
+ * // return ["a", "b"]
+ */
 export function extractKeys(
     [prefix, suffix]: [string, string],
     content: string,
